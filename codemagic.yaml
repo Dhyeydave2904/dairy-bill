@@ -1,0 +1,19 @@
+workflows:
+  dairy-bill-android:
+    name: Dairy Bill Android APK
+    max_build_duration: 60
+    environment:
+      flutter: stable
+    scripts:
+      - name: Generate Android platform files
+        script: flutter create --platforms=android --project-name dairy_bill .
+      - name: Set Android app name
+        script: sed -i 's/android:label="[^"]*"/android:label="Dairy Bill"/' android/app/src/main/AndroidManifest.xml
+      - name: Install dependencies
+        script: flutter pub get
+      - name: Build release APK
+        script: flutter build apk --release
+      - name: Rename APK
+        script: cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/dairy-bill.apk
+    artifacts:
+      - build/app/outputs/flutter-apk/dairy-bill.apk
